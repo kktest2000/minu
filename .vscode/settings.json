@@ -1,0 +1,12 @@
+{
+    "debug.javascript.autoAttachFilter": "always",
+    "debug.javascript.autoAttachSmartPattern": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**",
+        "**/$KNOWN_TOOLS$/**",
+        ""
+    ],
+    "debug.javascript.automaticallyTunnelRemoteServer": false,
+    "debug.javascript.debugByLinkOptions": "on",
+    "js-code-runner.clearPreviousOutput": true
+}
