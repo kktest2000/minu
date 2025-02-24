@@ -1,14 +1,9 @@
 $(document).ready(function () {
     let tasks = $(".mail-choice"); // Get all checkboxes
 
-    // Ensure no task is pre-selected or displayed on page load
-    tasks.prop("checked", false);
-    $(".mail-contents").hide();
-    $(".msg").removeClass("selected-bg");
-
     function displayTaskDetails(index) {
         $(".mail-contents").hide(); // Hide all task details
-        $(".mail-contents").eq(index).show(); // Show only the most recent selection
+        $(".mail-contents").eq(index).show(); // Show only the most recently selected task
 
         $(".msg").removeClass("selected-bg");
         $(".msg").eq(index).addClass("selected-bg");
@@ -18,18 +13,22 @@ $(document).ready(function () {
         let checkedCount = $(".inbox .mail-choice:checked").length;
         let totalTasks = $(".inbox .mail-choice").length;
 
-        $("#completed-count").html(checkedCount);
+        $("#completed-count").html(checkedCount); // Ensure completed count starts at 0
         $("#todo-count").html(totalTasks - checkedCount);
         $(".progress-bar").css("width", ((checkedCount / totalTasks) * 100) + "%");
         $(".progress-status").html(checkedCount + "/" + totalTasks);
     }
 
-    // Ensure all checkboxes are unchecked and no tasks are displayed initially
-    $(".mail-choice").prop("checked", false);
-    $(".mail-contents").hide(); // Hide all task details
+    // Ensure no task is pre-selected and counts are reset to zero
+    tasks.prop("checked", false);
+    $(".mail-contents").hide();
     $(".msg").removeClass("selected-bg");
 
-    // Remove any auto-selection animation by ensuring no timers are running
+    // Set completed count to zero at start
+    $("#completed-count").html(0);
+    $("#todo-count").html(tasks.length);
+
+    // Remove any previous auto-selection animations
     $(".msg").off("animation");
 
     // Handle user selection
@@ -44,4 +43,7 @@ $(document).ready(function () {
 
         updateTaskCounts();
     });
+
+    // Initial count update to reflect zero selections
+    updateTaskCounts();
 });
