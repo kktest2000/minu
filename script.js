@@ -1,43 +1,17 @@
 $(document).ready(function () {
     let tasks = $(".mail-choice"); // Get all checkboxes
-    let currentIndex = 0; // Start from first task
 
-    function selectTasksWithAnimation(index = 0) {
-        if (index >= tasks.length) {
-            return; // Stop if all tasks are selected
-        }
+    // Ensure no task is pre-selected or displayed on page load
+    tasks.prop("checked", false);
+    $(".mail-contents").hide();
+    $(".msg").removeClass("selected-bg");
 
-        let task = tasks.eq(index);
-        task.prop("checked", true).trigger("change");
+    function displayTaskDetails(index) {
+        $(".mail-contents").hide(); // Hide all task details
+        $(".mail-contents").eq(index).show(); // Show only the most recent selection
 
-        updateTaskCounts(); // Update left panel dynamically
-        displayLastTask(index); // Ensure last task is displayed
-
-        setTimeout(() => {
-            selectTasksWithAnimation(index + 1);
-        }, 500); // Animate every 500ms
-    }
-
-    function displayLastTask(lastIndex) {
-        $(".mail-contents").each(function (i) {
-            if (i === lastIndex) {
-                $(this).css({
-                    "display": "block",
-                    "transform": "scale(1.1)",
-                    "transition": "transform 0.3s ease-in-out",
-                });
-
-                setTimeout(() => {
-                    $(this).css("transform", "scale(1)");
-                }, 300);
-            } else {
-                $(this).css("display", "none");
-            }
-        });
-
-        // Ensure the last checkbox remains visually selected
         $(".msg").removeClass("selected-bg");
-        $(".msg").eq(lastIndex).addClass("selected-bg");
+        $(".msg").eq(index).addClass("selected-bg");
     }
 
     function updateTaskCounts() {
@@ -50,8 +24,24 @@ $(document).ready(function () {
         $(".progress-status").html(checkedCount + "/" + totalTasks);
     }
 
-    // Automatically start selecting tasks one by one with animation
-    setTimeout(() => {
-        selectTasksWithAnimation();
-    }, 1000);
+    // Ensure all checkboxes are unchecked and no tasks are displayed initially
+    $(".mail-choice").prop("checked", false);
+    $(".mail-contents").hide(); // Hide all task details
+    $(".msg").removeClass("selected-bg");
+
+    // Remove any auto-selection animation by ensuring no timers are running
+    $(".msg").off("animation");
+
+    // Handle user selection
+    tasks.on("change", function () {
+        let index = tasks.index(this);
+
+        if ($(this).prop("checked")) {
+            displayTaskDetails(index); // Show the newly selected task
+        } else {
+            $(".mail-contents").eq(index).hide(); // Hide if unchecked
+        }
+
+        updateTaskCounts();
+    });
 });
