@@ -15,7 +15,13 @@ $(document).ready(function () {
 
         $("#completed-count").html(checkedCount); // Ensure completed count starts at 0
         $("#todo-count").html(totalTasks - checkedCount);
-        $(".progress-bar").css("width", ((checkedCount / totalTasks) * 100) + "%");
+
+        // Update progress bar without animation on first load
+        $(".progress-bar").css({
+            "width": ((checkedCount / totalTasks) * 100) + "%",
+            "transition": checkedCount === 0 ? "none" : "width 0.3s ease-in-out"
+        });
+
         $(".progress-status").html(checkedCount + "/" + totalTasks);
     }
 
@@ -30,6 +36,9 @@ $(document).ready(function () {
 
     // Remove any previous auto-selection animations
     $(".msg").off("animation");
+
+    // Disable animation on initial load for progress bar
+    $(".progress-bar").css("transition", "none");
 
     // Handle user selection
     tasks.on("change", function () {
